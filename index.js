@@ -1,4 +1,123 @@
+/* Quote I want to display :
+    Hi ! I'm Quentin's Instagram Robot.
+    Last time I saw Quentin, he was in "google_location = Paris".
+    Here is some real time information about Paris :
+    "icon" : "description"
+    Température : "34" °C with "80" % humidity
+    Wind speed : "70" km/h
+    The sunset will be at ... PM
+    I just used "Quentin's egocentric API" which told me that Quentin is :
+    "A sugar addict",
+    He is rated "600" on chess.com (Blitz category) and "Silver 2"  on League of Legends,
+    and he likes to talk about : "L'audacieux jeune homme au trapèze volant".
+*/
+
 "use strict";
+
+var city = "";
+var coord_lon = "";
+var coord_lat = "";
+var weather_id = "";
+var main = "";
+var description = "";
+var icon = "";
+var kelvin = "";
+var humidity = "";
+var wind_speed = "";
+var formattedTimeForSunset = "";
+var visibility = "";
+var icon_emoji = null;
+var celcius = null;
+var new_date = null;
+var message1 = "blabla";
+var chess_current_score = null;
+var chess_best_score = null;
+
+const sendGetRequests = async () => {
+    try {
+        const resp = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=48.85845478413813&lon=2.294438382732459&appid=${process.env.OPENWEATHER_API}`);
+        const resp2 = await axios.get('https://api.chess.com/pub/player/asfxgf/stats');
+        const resp3 = await axios.get('');
+        //console.log(resp.data);
+        //console.log(resp2.data);
+        chess_current_score = resp2.data.chess_blitz.last.rating;
+        chess_best_score = resp2.data.chess_blitz.best.rating;
+        city = "Paris";
+        coord_lon = resp.data.coord.lon;
+        coord_lat = resp.data.coord.lat;
+        weather_id = resp.data.weather[0].id;
+        main = resp.data.weather[0].main;
+        description = resp.data.weather[0].description;
+        icon = resp.data.weather[0].icon;
+        kelvin = Math.round(resp.data.main.feels_like);
+        celcius = Math.round(kelvin - 273.15);
+        humidity = resp.data.main.humidity;
+        wind_speed = Math.round(resp.data.wind.speed * 3.6);
+        visibility = resp.data.visibility;
+        let unix_timestamp = resp.data.sys.sunset;
+        // Create a new JavaScript Date object based on the timestamp
+        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+        var date = new Date(unix_timestamp * 1000);
+        // Hours part from the timestamp
+        var hours = date.getHours();
+        // Minutes part from the timestamp
+        var minutes = "0" + date.getMinutes();
+        // Seconds part from the timestamp
+        var seconds = "0" + date.getSeconds();
+        // Will display time in 10:30:23 format
+        formattedTimeForSunset = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+        switch (icon) {
+            case '01d':
+            case '01n':
+                icon_emoji = emoji.emojify(':sunny:');
+                break;
+            case '02d':
+            case '02n':
+                icon_emoji = emoji.emojify(':partly_sunny:');
+                break;
+            case '03d':
+            case '03n':
+                icon_emoji = emoji.emojify(':cloud:');
+                break;
+            case '04d':
+            case '04n':
+                icon_emoji = emoji.emojify(':cloud:');
+                break;
+            case '09d':
+            case '09n':
+                icon_emoji = emoji.emojify(':umbrella:');
+                break;
+            case '10d':
+            case '10n':
+                icon_emoji = emoji.emojify(':umbrella:');
+                break;
+            case '11d':
+            case '11n':
+                icon_emoji = emoji.emojify(':zap:');
+                break;
+            case '13d':
+            case '13n':
+                icon_emoji = emoji.emojify(':snowflake:');
+                break;
+            case '50d':
+            case '50n':
+                icon_emoji = emoji.emojify(':foggy:');
+                break;
+            default:
+                icon_emoji = emoji.emojify(':heart:');
+        }
+        message1 = emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " right now :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt température : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated " + chess_current_score + " on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + "Is a sugar addict.\n" + emoji.emojify(':heart:') + " Loves to talk about : /L'audacieux jeune homme au trapèze volant/.";
+        //console.log(message1);
+        console.log("fin get request, return message");
+        return message1;
+    } catch (err) {
+        // Handle Error Here
+        console.error(err);
+    }
+};
+
+//var nasaget = httpGetAsync("https://api.nasa.gov/planetary/apod?api_key=AQ6CIjGmQd6TKRKwJACGGWFo5mvU0GWcAjkxcZaD")
+
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,6 +154,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+const axios = require('axios');
 var express = require("express");
 var app = express();
 var Instagram = require("instagram-web-api");
@@ -45,9 +165,32 @@ var wordpos = new WordPOS();
 var fs = require("fs");
 require("dotenv").config();
 var port = process.env.PORT || 4000;
+const fetch = require('node-fetch');
+var emoji = require('node-emoji');
+var moment = require('moment');
+
 // Upload new Pixel Mike post to Instagram every day at 12:00 PM
 //cron.schedule("00 12 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
-cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+const datas = async () => {
+    try {
+       await sendGetRequests();
+       console.log(message1);
+    } catch (err){
+        console.error(err);
+    }
+}
+
+datas();
+
+cron.schedule("* 12 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+    console.log('debut cron...');
+    //sendGetRequest();
+    console.log("reprise du workflow...");
+    //message1 = emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " today :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt température : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated /600/ on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + "Is a sugar addict.\n" + emoji.emojify(':heart:') + " Loves to talk about : /L'audacieux jeune homme au trapèze volant/.";
+    //console.log(message1);
+    //console.log(emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " today :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt température : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated /600/ on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + "Is a sugar addict.\n" + emoji.emojify(':heart:') + " Loves to talk about : /L'audacieux jeune homme au trapèze volant/.");
+    console.log("fin du workflow debut d'un sleep...");
+    sleep(30000000);
     var cookieStore, client, instagramPostFunction, loginFunction;
     return __generator(this, function (_a) {
         cookieStore = new FileCookieStore("./cookies.json");
@@ -117,6 +260,7 @@ cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0
                                                     (firstWordDef === "most" ? "the " : "") +
                                                     definition
                                                 : "is feeling " + definition;
+                                            /*
                                             newCaption = "Pixel Mike is " + newDesc_1 + " today.\nIn other words, he " + newDef
                                                 .replace(/\w*(?<! of )being/g, "")
                                                 .replace(/\s{2,}/g, " ")
@@ -124,6 +268,8 @@ cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0
                                                 .replace("you", "he")
                                                 .replace(/is having(?! or)/g, "has")
                                                 .trim() + ".\nAre you " + newDesc_1 + "?\nLet him know in the comments!\n#" + result[0].replace(/_|'|-/g, "") + " #PixelMike";
+                                            */
+                                            newCaption = message1;
                                             if (!currentClient) return [3 /*break*/, 2];
                                             return [4 /*yield*/, currentClient
                                                     .uploadPhoto({
@@ -140,7 +286,7 @@ cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0
                                                                 console.log("https://www.instagram.com/p/" + media.code + "/");
                                                                 return [4 /*yield*/, currentClient.addComment({
                                                                         mediaId: media.id,
-                                                                        text: "#mikewazowski #monstersinc #disney #pixel #pixar #nft #pixelart #dailyart #shrek #monstersuniversity #funny #8bit #cute #digitalart #illustration",
+                                                                        text: "#nocode #lowcode #freelance #tech #paris #ruby",
                                                                     })];
                                                             case 1:
                                                                 _a.sent();
@@ -241,6 +387,9 @@ cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0
         return [2 /*return*/];
     });
 }); });
+
+/*
 app.listen(port, function () {
     console.log("Listening on port " + port + "...");
 });
+*/
