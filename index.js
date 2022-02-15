@@ -195,7 +195,7 @@ var WordPOS = require("wordpos");
 var wordpos = new WordPOS();
 var fs = require("fs");
 require("dotenv").config();
-var port = process.env.PORT || 4000;
+var port = process.env.PORT || 5000;
 const fetch = require('node-fetch');
 var emoji = require('node-emoji');
 var moment = require('moment');
