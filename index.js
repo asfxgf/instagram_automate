@@ -438,8 +438,6 @@ cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0
     });
 }); });
 
-/*
 app.listen(port, function () {
     console.log("Listening on port " + port + "...");
 });
-*/
