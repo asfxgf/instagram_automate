@@ -27,15 +27,27 @@ var wind_speed = "";
 var formattedTimeForSunset = "";
 var visibility = "";
 var icon_emoji = null;
-var celcius = null;
-var new_date = null;
+var celcius = 0;
 var message1 = "blabla";
-var chess_current_score = null;
-var chess_best_score = null;
+var chess_current_score = 0;
+var chess_best_score = 0;
 var character = "";
 var culture = "";
 var picture_url = "";
 var day_id = 1;
+
+
+
+
+const datas = async () => {
+    try {
+       await sendGetRequests();
+       console.log(message1);
+    } catch (err){
+        console.error(err);
+    }
+}
+
 
 const sendGetRequests = async () => {
     try {
@@ -124,14 +136,15 @@ const sendGetRequests = async () => {
                 icon_emoji = emoji.emojify(':heart:');
         }
 
-        var download = function(uri, filename, callback){
+        var download = async function(uri, filename, callback){
             request.head(uri, function(err, res, body){
             console.log('content-type:', res.headers['content-type']);
             console.log('content-length:', res.headers['content-length']);
             request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
             });
         };
-        download(picture_url, 'pixel_mike.jpg', function(){
+
+        await download(picture_url, 'pixel_mike.jpg', function(){
             console.log('download done');
         });
 
@@ -221,22 +234,12 @@ const datas = async () => {
 
 datas();
 */
-cron.schedule("* 15 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+cron.schedule("* 12 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
     console.log('debut cron...');
     //sendGetRequest();
     //message1 = emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " today :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt température : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated /600/ on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + "Is a sugar addict.\n" + emoji.emojify(':heart:') + " Loves to talk about : /L'audacieux jeune homme au trapèze volant/.";
     //console.log(message1);
     //console.log(emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " today :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt température : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated /600/ on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + "Is a sugar addict.\n" + emoji.emojify(':heart:') + " Loves to talk about : /L'audacieux jeune homme au trapèze volant/.");
-
-
-    const datas = async () => {
-        try {
-           await sendGetRequests();
-           console.log(message1);
-        } catch (err){
-            console.error(err);
-        }
-    }
 
     datas();
 
