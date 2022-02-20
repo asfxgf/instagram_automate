@@ -41,12 +41,7 @@ var id_of_the_day = 1;
 var today = WithoutTime(new Date());
 
 
-
-
-
 SetIdOfTheDay();
-
-
 
 
 function SetIdOfTheDay() {
