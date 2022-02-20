@@ -235,7 +235,7 @@ var request = require('request');
 
 //moment().subtract(1.5, 'months') == moment().subtract(2, 'months');
 
-cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
     console.log('debut cron...');
 
     SetIdOfTheDay();
@@ -337,8 +337,8 @@ cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0
                                                                 console.log("https://www.instagram.com/p/" + media.code + "/");
                                                                 return [4 /*yield*/, currentClient.addComment({
                                                                         mediaId: media.id,
-                                                                        //text: "#nocode #lowcode #freelance #tech #paris #ruby",
-                                                                        text: "nothing to say",
+                                                                        text: "#nocode #lowcode #freelance #tech #paris #ruby",
+                                                                        //text: "nothing to say",
                                                                     })];
                                                             case 1:
                                                                 _a.sent();
