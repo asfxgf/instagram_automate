@@ -31,7 +31,7 @@ var formattedTimeForSunset = "";
 var visibility = "";
 var icon_emoji = null;
 var celcius = 0;
-var message1 = "blabla";
+var message1 = "test";
 var chess_current_score = 0;
 var chess_best_score = 0;
 var character = "";
@@ -239,12 +239,12 @@ var request = require('request');
 
 //moment().subtract(1.5, 'months') == moment().subtract(2, 'months');
 
-cron.schedule("* 12 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
     console.log('debut cron...');
 
     SetIdOfTheDay();
     datas();
-    
+
     var cookieStore, client, instagramPostFunction, loginFunction;
     return __generator(this, function (_a) {
         cookieStore = new FileCookieStore("./cookies.json");
