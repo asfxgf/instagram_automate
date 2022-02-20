@@ -14,6 +14,9 @@
 
 "use strict";
 
+//SETUP PART
+var date1 = new Date("02/20/2022"); // Insert the date of the day you want to start the program
+
 var city = "";
 var coord_lon = "";
 var coord_lat = "";
@@ -34,10 +37,32 @@ var chess_best_score = 0;
 var character = "";
 var culture = "";
 var picture_url = "";
-var day_id = 1;
+var id_of_the_day = 1;
+var today = WithoutTime(new Date());
 
 
 
+
+
+SetIdOfTheDay();
+
+
+
+
+function SetIdOfTheDay() {
+    today = WithoutTime(new Date());
+    var Difference_In_Time = today.getTime() - date1.getTime();
+    // To calculate the no. of days between two dates
+    id_of_the_day = Difference_In_Time / (1000 * 3600 * 24) + 1; // + 1 to start at ID 1
+    //To display the final no. of days (result)
+    console.log("L'id du jour est : " + id_of_the_day);
+}
+
+function WithoutTime(dateTime) {
+    var date = new Date(dateTime.getTime());
+    date.setHours(0, 0, 0, 0);
+    return date;
+}
 
 const datas = async () => {
     try {
@@ -55,14 +80,14 @@ const sendGetRequests = async () => {
         const resp2 = await axios.get(`https://api.chess.com/pub/player/asfxgf/stats`);
         let axios_config = {
             headers: {
-                'X-User-Email': 'deleglise.quentin@hotmail.fr',
-                'X-User-Token': `${process.env.INSTAGRAM_APP_API}`,
+                'X-User-Email': `${process.env.INSTAGRAM_APP_API_EMAIL}`,
+                'X-User-Token': `${process.env.INSTAGRAM_APP_API_TOKEN}`,
                 'Content-Type': 'application/json'
             },
             params: {
             },
         }
-        const resp3 = await axios.get(`https://instagram-personal-api.herokuapp.com/api/v1/candidates/${day_id}`, axios_config);
+        const resp3 = await axios.get(`https://instagram-personal-api.herokuapp.com/api/v1/candidates/${id_of_the_day}`, axios_config);
         //console.log(resp.data);
         //console.log(resp2.data);
         //console.log(resp3.data);
@@ -214,33 +239,17 @@ const fetch = require('node-fetch');
 var emoji = require('node-emoji');
 var moment = require('moment');
 var cloudinary = require('cloudinary');
-var fs = require('fs'),
-    request = require('request');
+var fs = require('fs');
+var request = require('request');
 
 
-// Upload new Pixel Mike post to Instagram every day at 12:00 PM
-//cron.schedule("00 12 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
 
+//moment().subtract(1.5, 'months') == moment().subtract(2, 'months');
 
-/*
-const datas = async () => {
-    try {
-       await sendGetRequests();
-       console.log(message1);
-    } catch (err){
-        console.error(err);
-    }
-}
-
-datas();
-*/
 cron.schedule("* 12 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
     console.log('debut cron...');
-    //sendGetRequest();
-    //message1 = emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " today :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt température : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated /600/ on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + "Is a sugar addict.\n" + emoji.emojify(':heart:') + " Loves to talk about : /L'audacieux jeune homme au trapèze volant/.";
-    //console.log(message1);
-    //console.log(emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " today :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt température : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated /600/ on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + "Is a sugar addict.\n" + emoji.emojify(':heart:') + " Loves to talk about : /L'audacieux jeune homme au trapèze volant/.");
 
+    SetIdOfTheDay();
     datas();
 
     var cookieStore, client, instagramPostFunction, loginFunction;
