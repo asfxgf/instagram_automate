@@ -237,8 +237,6 @@ var cloudinary = require('cloudinary');
 var fs = require('fs');
 var request = require('request');
 
-
-
 //moment().subtract(1.5, 'months') == moment().subtract(2, 'months');
 
 cron.schedule("* 12 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -246,7 +244,7 @@ cron.schedule("* 12 * * *", function () { return __awaiter(void 0, void 0, void 
 
     SetIdOfTheDay();
     datas();
-
+    
     var cookieStore, client, instagramPostFunction, loginFunction;
     return __generator(this, function (_a) {
         cookieStore = new FileCookieStore("./cookies.json");
