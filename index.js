@@ -298,7 +298,7 @@ const sendGetRequests = async () => {
         })
         message1 = emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " right now :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt température : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated " + chess_current_score + " on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + character + ".\n" + emoji.emojify(':heart:') + " Loves to talk about : " + culture + ".";
         await console.log("message1");
-        twitter_message = "🌎Today : Quentin is in Paris !🌎\nHis API told me that Quentin :\n♟ Is rated "+ chess_current_score + " on chess.com(blitz) !\n💡" + character + ".\n❤ Love to talk about : " + culture + ".\n #nocode #lowcode";
+        twitter_message = "🤖Hi, i'm Quentin's free bot !🤖\nHis API told me that Quentin :\n♟ Is rated "+ chess_current_score + " on chess.com(blitz) !\n💡" + character + ".\n❤ Love to talk about : " + culture + ".\n #nocode #lowcode";
         
         if (twitter_message.length < 280) {
             console.log("The twit get " + twitter_message.length + " characters.");
