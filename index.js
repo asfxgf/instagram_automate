@@ -17,6 +17,30 @@
 //SETUP PART
 var date1 = new Date("02/20/2022"); // Insert the date of the day you want to start the program
 
+
+
+const axios = require('axios');
+var express = require("express");
+var app = express();
+var Instagram = require("instagram-web-api");
+var FileCookieStore = require("tough-cookie-filestore2");
+var cron = require("node-cron");
+var WordPOS = require("wordpos");
+var wordpos = new WordPOS();
+var fs = require("fs");
+require("dotenv").config();
+var port = process.env.PORT || 4000;
+const fetch = require('node-fetch');
+var emoji = require('node-emoji');
+var moment = require('moment');
+var cloudinary = require('cloudinary');
+var fs = require('fs');
+var request = require('request');
+var async = require("async");
+var Twit = require('twit');
+
+
+
 var city = "";
 var coord_lon = "";
 var coord_lat = "";
@@ -38,11 +62,69 @@ var character = "";
 var culture = "";
 var picture_url = "";
 var id_of_the_day = 1;
+var twitter_message = "test_twitter_message";
 var today = WithoutTime(new Date());
 
 
-SetIdOfTheDay();
+var T = new Twit({
+  consumer_key:         `${process.env.TWITTER_CONSUMER_KEY}`,
+  consumer_secret:      `${process.env.TWITTER_CONSUMER_SECRET}`,
+  access_token:         `${process.env.TWITTER_ACCESS_TOKEN}`,
+  access_token_secret:  `${process.env.TWITTER_ACCESS_TOKEN_SECRET}`,
+  timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
+  strictSSL:            true,     // optional - requires SSL certificates to be valid.
+});
 
+function tweeted(err, data, response) {
+    if (err) {
+        console.log("Twitter post went wrong, for reason : " + err.allErrors[0].message);
+    } else {
+        console.log("New Tweet posted");
+    }
+}
+
+async function tweetIt() {
+    var tweet = {
+        status: 'publication 13'
+    }
+    await T.post('statuses/update', tweet, tweeted);
+}
+
+async function publishTwitter() {
+  const tweet_post = await tweetIt();
+}
+
+async function publishTwitterWithMedia() {
+  const tweet_post_with_media = await tweetItWithMedia();
+}
+
+async function tweetItWithMedia() {
+    console.log("debut twitterwithmedia...");
+
+    var b64content = await fs.readFileSync('./images.jpg', { encoding: 'base64' })
+    // first we must post the media to Twitter
+
+    await T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+        // now we can assign alt text to the media, for use by screen readers and
+        // other text-based presentations and interpreters
+        var mediaIdStr = data.media_id_string;
+        var altText = "Image Downloaded by Quentin's personal API and posted via Quentin DELEGLISE Twitter's bot.";
+        var meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
+        T.post('media/metadata/create', meta_params, function (err, data, response) {
+            if (!err) {
+                // now we can reference the media and post a tweet (media will attach to the tweet)
+                //var params = { status: `This is great coding for asfxgf ! #quentin test dev`, media_ids: [mediaIdStr] } // static
+                var params = { status: twitter_message, media_ids: [mediaIdStr] } // dynamic
+                T.post('statuses/update', params, function (err, data, response) {
+                    console.log(data.id);
+                    console.log("fin twitterwithmedia !");
+                })
+            } else {
+                console.log(err);
+            }
+        })
+    })
+}
 
 function SetIdOfTheDay() {
     today = WithoutTime(new Date());
@@ -61,11 +143,33 @@ function WithoutTime(dateTime) {
 
 const datas = async () => {
     try {
-       await sendGetRequests();
-       console.log(message1);
+        sendGetRequests().then(() => {
+            publishTwitterWithMedia();
+        })
     } catch (err){
         console.error(err);
     }
+}
+
+
+function streamWriter(stream, filename) {
+  return new Promise((resolve) => {
+    const write = fs.createWriteStream(filename)
+    write.on('finish', () => {
+      resolve()
+    })
+    stream.data.pipe(write)
+  })
+}
+
+async function download(uri, filename) {
+  const imageStream = await axios.get(uri, { responseType: 'stream' })
+  await streamWriter(imageStream, filename)
+}
+
+async function rundl() {
+  //image_url = 'https://media.istockphoto.com/photos/recreational-vehicle-driving-on-autumn-highway-in-beautiful-mountains-picture-id1253960547';
+  await download(picture_url, './images.jpg')
 }
 
 
@@ -155,7 +259,7 @@ const sendGetRequests = async () => {
             default:
                 icon_emoji = emoji.emojify(':heart:');
         }
-
+        /*
         var download = async function(uri, filename, callback){
             request.head(uri, function(err, res, body){
             console.log('content-type:', res.headers['content-type']);
@@ -163,14 +267,47 @@ const sendGetRequests = async () => {
             request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
             });
         };
-
-        await download(picture_url, 'pixel_mike.jpg', function(){
-            console.log('download done');
+        await download(picture_url, './images.jpg', function(){
+        console.log('download done');
         });
+        */
 
+        /*
+        function download (uri, filename, callback){
+            request.head(uri, function(err, res, body){
+                console.log('content-type:', res.headers['content-type']);
+                console.log('content-length:', res.headers['content-length']);
+                request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+            });
+        }
 
+        async function runDownload() {
+            image_url = "https://res.cloudinary.com/asfxgf/image/upload/v1644796579/vision_x9zea3.jpg"
+            console.log("1");
+            await download(image_url, './images.jpg', function(){
+                console.log('done');
+                console.log("2");
+            });
+        };
+        runDownload();
+        */
+
+        console.log('debut dl')
+        await rundl().then(() => {
+          console.log('fin dl')
+        })
         message1 = emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " right now :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt température : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated " + chess_current_score + " on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + character + ".\n" + emoji.emojify(':heart:') + " Loves to talk about : " + culture + ".";
+        await console.log("message1");
+        twitter_message = "🌎Today : Quentin is in Paris !🌎\nHis API told me that Quentin :\n♟ Is rated "+ chess_current_score + " on chess.com(blitz) !\n💡" + character + ".\n❤ Love to talk about : " + culture + ".\n #nocode #lowcode";
+        
+        if (twitter_message.length < 280) {
+            console.log("The twit get " + twitter_message.length + " characters.");
+        } else {
+            twitter_message = "Today's news are too huge for twitter (280 characters is not enough for my incredible life), check out my Instagram : @quentintin1\nhttps://www.instagram.com/quentintin1/";
+            console.log("The twit got too much caracters (" + twitter_message.length + ") so we changed the text");
+        }
         //console.log(message1);
+        //console.log(twitter_message);
         console.log("fin get request, return message");
         return message1;
     } catch (err) {
@@ -215,25 +352,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-const axios = require('axios');
-var express = require("express");
-var app = express();
-var Instagram = require("instagram-web-api");
-var FileCookieStore = require("tough-cookie-filestore2");
-var cron = require("node-cron");
-var WordPOS = require("wordpos");
-var wordpos = new WordPOS();
-var fs = require("fs");
-require("dotenv").config();
-var port = process.env.PORT || 4000;
-const fetch = require('node-fetch');
-var emoji = require('node-emoji');
-var moment = require('moment');
-var cloudinary = require('cloudinary');
-var fs = require('fs');
-var request = require('request');
-
-//moment().subtract(1.5, 'months') == moment().subtract(2, 'months');
 
 cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
     console.log('debut cron...');
@@ -323,7 +441,7 @@ cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 
                                             if (!currentClient) return [3 /*break*/, 2];
                                             return [4 /*yield*/, currentClient
                                                     .uploadPhoto({
-                                                    photo: "./pixel_mike.jpg",
+                                                    photo: "./images.jpg",
                                                     //photo: "./images/google.png",
                                                     caption: newCaption,
                                                     post: "feed",
