@@ -1,6 +1,8 @@
 const axios = require('axios').default
 const fs = require('fs')
 
+
+/*
 function streamWriter(stream, filename) {
   return new Promise((resolve) => {
     const write = fs.createWriteStream(filename)
@@ -25,3 +27,4 @@ console.log('debut')
 rundl().then(() => {
     console.log('fin')
 })
+*/
