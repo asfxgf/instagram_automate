@@ -15,9 +15,7 @@
 "use strict";
 
 //SETUP PART
-var date1 = new Date("02/20/2022"); // Insert the date of the day you want to start the program
-
-
+var date1 = new Date("05/15/2022"); // Insert the date of the day you want to start the program
 
 const axios = require('axios');
 var express = require("express");
@@ -186,7 +184,8 @@ const sendGetRequests = async () => {
             params: {
             },
         }
-        const resp3 = await axios.get(`https://instagram-personal-api.herokuapp.com/api/v1/candidates/${id_of_the_day}`, axios_config);
+        //const resp3 = await axios.get(`https://instagram-personal-api.herokuapp.com/api/v1/candidates/${id_of_the_day}`, axios_config);
+        const resp3 = await axios.get(`http://localhost:3000/api/v1/candidates/${id_of_the_day}`, axios_config);
         //console.log(resp.data);
         //console.log(resp2.data);
         //console.log(resp3.data);
@@ -353,7 +352,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 
-cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+//cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 0, function () { --> Le bon cron a remettre
+cron.schedule("04 12 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
     console.log('debut cron...');
 
     SetIdOfTheDay();
@@ -374,6 +374,7 @@ cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 
             while (triesCounter < 3) {
                 console.log("Try #" + triesCounter);
                 try {
+                    console.log("test");
                     wordpos.randAdjective({ count: 10 }, function (res) {
                         var resultArr = res.filter(function (item) {
                             // Must contain at least one vowel
@@ -389,23 +390,29 @@ cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 
                                 // No spelled-out numbers (other than one or ten)
                                 !/(two|three|four|five|six|seven|eight|nine|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand)/i.test(item);
                         });
+                        console.log("test2");
                         var result = [""];
                         if (resultArr.length > 0) {
+                            console.log("resltArr")
                             result = resultArr;
                         }
                         else {
+                            console.log("result = res")
                             result = res;
                         }
                         if (result[0]) {
+                            console.log("result 0");
                             var resultWord = result[0].replace(/_/g, " ");
                             var newDesc_1 = resultWord.slice(result[0].length - 3) === "ing"
                                 ? resultWord
                                 : "feeling " + resultWord;
                             wordpos.lookupAdjective(result[0], function (res) { return __awaiter(void 0, void 0, void 0, function () {
                                 var definition, firstWordDef, secondWordDef, newDef, newCaption;
+                                console.log("test3")
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
+                                            console.log("case 0")
                                             definition = res[0].def;
                                             firstWordDef = definition.split(" ")[0];
                                             secondWordDef = definition.split(" ")[1];
@@ -438,16 +445,18 @@ cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 
                                                 .trim() + ".\nAre you " + newDesc_1 + "?\nLet him know in the comments!\n#" + result[0].replace(/_|'|-/g, "") + " #PixelMike";
                                             */
                                             newCaption = message1;
+                                            console.log("message 1 : " + message1);
                                             if (!currentClient) return [3 /*break*/, 2];
-                                            return [4 /*yield*/, currentClient
-                                                    .uploadPhoto({
+                                            console.log("message 2")
+                                            return [4 /*yield*/, currentClient.uploadPhoto({
                                                     photo: "./images.jpg",
                                                     //photo: "./images/google.png",
                                                     caption: newCaption,
                                                     post: "feed",
-                                                })
-                                                    .then(function (res) { return __awaiter(void 0, void 0, void 0, function () {
+                                                }).then(function (res) { return __awaiter(void 0, void 0, void 0, function () {
                                                     var media;
+                                                    console.log(res);
+                                                    console.log("then function...");
                                                     return __generator(this, function (_a) {
                                                         switch (_a.label) {
                                                             case 0:
@@ -494,8 +503,7 @@ cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 
                                 .then(function () {
                                 console.log("Login successful!");
                                 instagramPostFunction(client);
-                            })
-                                .catch(function (err) { return __awaiter(void 0, void 0, void 0, function () {
+                            }).catch(function (err) { return __awaiter(void 0, void 0, void 0, function () {
                                 var newCookieStore, newClient, delayedLoginFunction;
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
