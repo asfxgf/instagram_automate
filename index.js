@@ -15,7 +15,7 @@
 "use strict";
 
 //SETUP PART
-var date1 = new Date("05/15/2022"); // Insert the date of the day you want to start the program
+var date1 = new Date("05/27/2022"); // Insert the date of the day you want to start the program
 
 const axios = require('axios');
 var express = require("express");
@@ -353,7 +353,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 
 //cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 0, function () { --> Le bon cron a remettre
-cron.schedule("04 12 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+cron.schedule("00 11 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
     console.log('debut cron...');
 
     SetIdOfTheDay();
