@@ -15,7 +15,11 @@
 "use strict";
 
 //SETUP PART
+<<<<<<< HEAD
 var date1 = new Date("07/28/2022"); // Insert the date of the day you want to start the program
+=======
+var date1 = new Date("07/26/2022"); // Insert the date of the day you want to start the program
+>>>>>>> 75ae633c5a18dafb2768159f349b7aee12c6a331
 
 const axios = require('axios');
 var express = require("express");
@@ -97,6 +101,7 @@ async function publishTwitterWithMedia() {
 }
 
 async function tweetItWithMedia() {
+  /*
     console.log("debut twitterwithmedia...");
 
     var b64content = await fs.readFileSync('./images.jpg', { encoding: 'base64' })
@@ -122,6 +127,7 @@ async function tweetItWithMedia() {
             }
         })
     })
+    */
 }
 
 function SetIdOfTheDay() {
@@ -185,7 +191,11 @@ const sendGetRequests = async () => {
             },
         }
         //const resp3 = await axios.get(`https://instagram-personal-api.herokuapp.com/api/v1/candidates/${id_of_the_day}`, axios_config);
+<<<<<<< HEAD
         const resp3 = await axios.get(`https://instagram-automate.osc-fr1.scalingo.io/${id_of_the_day}`, axios_config);
+=======
+        const resp3 = await axios.get(`https://quentin-instagram-api.osc-fr1.scalingo.io/api/v1/candidates/${id_of_the_day}`, axios_config);
+>>>>>>> 75ae633c5a18dafb2768159f349b7aee12c6a331
         //console.log(resp.data);
         //console.log(resp2.data);
         //console.log(resp3.data);
@@ -353,7 +363,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 
 //cron.schedule("0 13 * * *", function () { return __awaiter(void 0, void 0, void 0, function () { --> Le bon cron a remettre
-cron.schedule("00 11 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
     console.log('debut cron...');
 
     SetIdOfTheDay();
@@ -413,6 +423,7 @@ cron.schedule("00 11 * * *", function () { return __awaiter(void 0, void 0, void
                                     switch (_a.label) {
                                         case 0:
                                             console.log("case 0")
+                                            /*
                                             definition = res[0].def;
                                             firstWordDef = definition.split(" ")[0];
                                             secondWordDef = definition.split(" ")[1];
@@ -435,6 +446,7 @@ cron.schedule("00 11 * * *", function () { return __awaiter(void 0, void 0, void
                                                     (firstWordDef === "most" ? "the " : "") +
                                                     definition
                                                 : "is feeling " + definition;
+                                            */
                                             /*
                                             newCaption = "Pixel Mike is " + newDesc_1 + " today.\nIn other words, he " + newDef
                                                 .replace(/\w*(?<! of )being/g, "")
