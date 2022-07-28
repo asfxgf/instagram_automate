@@ -15,7 +15,7 @@
 "use strict";
 
 //SETUP PART
-var date1 = new Date("05/27/2022"); // Insert the date of the day you want to start the program
+var date1 = new Date("07/28/2022"); // Insert the date of the day you want to start the program
 
 const axios = require('axios');
 var express = require("express");
@@ -185,7 +185,7 @@ const sendGetRequests = async () => {
             },
         }
         //const resp3 = await axios.get(`https://instagram-personal-api.herokuapp.com/api/v1/candidates/${id_of_the_day}`, axios_config);
-        const resp3 = await axios.get(`http://localhost:3000/api/v1/candidates/${id_of_the_day}`, axios_config);
+        const resp3 = await axios.get(`https://instagram-automate.osc-fr1.scalingo.io/${id_of_the_day}`, axios_config);
         //console.log(resp.data);
         //console.log(resp2.data);
         //console.log(resp3.data);
@@ -295,7 +295,7 @@ const sendGetRequests = async () => {
         await rundl().then(() => {
           console.log('fin dl')
         })
-        message1 = emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " right now :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt temperature : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated " + chess_current_score + " on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + character + ".\n" + emoji.emojify(':heart:') + " Loves to talk about : " + culture + ".";
+        message1 = emoji.emojify(':robot_face:') + "Hi ! I'm Quentin's Instagram Robot." + emoji.emojify(':robot_face:') + "\n" + emoji.emojify(':world_map:') + " Last time I saw Quentin, he was in " + city + ".\nAbout " + city + " right now :\n" + icon_emoji + " " + description + ".\n" + emoji.emojify(':thermometer:') + " Felt temperature : " + celcius + "°C (" + kelvin + "K) with " + humidity + "% humidity.\n" + emoji.emojify(":dash:") + " Wind speed : " + wind_speed + "km/h.\n" + emoji.emojify(':sunrise:') + " Sunset will be at " + formattedTimeForSunset + " " + emoji.emojify(':clock1:') + ".\nToday, Quentin's personal API told me that Quentin :\n" + emoji.emojify(':chess_pawn:') + "Is rated " + chess_current_score + " on chess.com (Blitz category)\n" + emoji.emojify(':sweat_smile:') + character + ".\n" + emoji.emojify(':heart:') + " Likes to talk about : " + culture + ".";
         await console.log("message1");
         twitter_message = "🤖Hi, i'm Quentin's free bot !🤖\nHis API told me that Quentin :\n♟ Is rated "+ chess_current_score + " on chess.com(blitz) !\n💡" + character + ".\n❤ Likes to talk about : " + culture + ".\n #nocode #lowcode";
         
